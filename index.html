@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>REVERSI PUYO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+<div id="app">
+  <div id="wrap"><canvas id="c"></canvas></div>
+  <div id="controls">
+    <button data-key="a" aria-label="左">◀</button>
+    <button data-key="d" aria-label="右">▶</button>
+    <button data-key="s" aria-label="高速落下">▼</button>
+    <button data-key="space" aria-label="回転" class="rotate">⟳</button>
+  </div>
+</div>
+<dialog id="player-name-dialog" aria-labelledby="player-name-title">
+  <form id="player-name-form" method="dialog">
+    <h2 id="player-name-title">プレイヤー名</h2>
+    <label for="player-name-input">名前は7文字までです。</label>
+    <input id="player-name-input" type="text" autocomplete="nickname">
+    <div class="dialog-actions">
+      <button type="submit" value="cancel" class="cancel">キャンセル</button>
+      <button type="submit" value="save">保存</button>
+    </div>
+  </form>
+</dialog>
+<dialog id="room-dialog" aria-labelledby="room-dialog-title">
+  <form id="room-form">
+    <h2 id="room-dialog-title">ルームに参加</h2>
+    <p id="room-dialog-message">4桁のルームコードを入力してください。</p>
+    <label id="room-code-label" for="room-code-input">ルームコード</label>
+    <input id="room-code-input" type="text" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" autocomplete="one-time-code">
+    <p id="room-dialog-error" role="status" aria-live="polite"></p>
+    <div class="dialog-actions">
+      <button type="button" id="room-dialog-close" class="cancel">閉じる</button>
+      <button type="submit" id="room-join-submit">参加</button>
+    </div>
+    <div class="dialog-actions" id="room-confirm-actions" hidden>
+      <button type="button" id="room-confirm-cancel" class="cancel">キャンセル</button>
+      <button type="button" id="room-confirm-leave">タイトルに戻る</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="sound.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

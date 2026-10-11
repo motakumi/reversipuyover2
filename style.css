@@ -1,0 +1,176 @@
+:root {
+  --fg: #ffffff;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+html, body {
+  height: 100%;
+  margin: 0;
+  background: radial-gradient(ellipse at 50% 30%, #1d1b3a 0%, #0b0b18 70%);
+  color: var(--fg);
+  overflow: hidden;
+  font-family: system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", sans-serif;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: none;
+}
+#app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+#wrap {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+canvas {
+  display: block;
+  border-radius: 10px;
+  box-shadow: 0 0 30px rgba(80, 140, 255, 0.3), 0 0 0 2px rgba(120, 150, 255, 0.35);
+}
+#controls {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  width: min(100%, 520px);
+  padding: 0 12px 10px;
+  box-sizing: border-box;
+}
+#controls button {
+  height: 60px;
+  border: 2px solid #6f86ff;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #3b4170, #23264a);
+  color: var(--fg);
+  font-size: 26px;
+  box-shadow: 0 4px 0 #14163a, 0 0 12px rgba(100, 130, 255, 0.35);
+  touch-action: none;
+  transition: transform 0.05s, box-shadow 0.05s;
+}
+#controls button.rotate {
+  border-color: #ffcb4d;
+  background: linear-gradient(180deg, #6b5a2a, #3f3416);
+  box-shadow: 0 4px 0 #2a220c, 0 0 12px rgba(255, 200, 80, 0.35);
+}
+#controls button.active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #14163a, 0 0 18px rgba(130, 160, 255, 0.6);
+  filter: brightness(1.25);
+}
+#player-name-dialog {
+  width: min(360px, calc(100% - 48px));
+  padding: 24px;
+  border: 2px solid #7d94ff;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #25294f, #13152d);
+  color: var(--fg);
+  box-shadow: 0 0 30px rgba(80, 140, 255, 0.4);
+}
+#room-dialog {
+  width: min(360px, calc(100% - 48px));
+  padding: 24px;
+  border: 2px solid #7d94ff;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #25294f, #13152d);
+  color: var(--fg);
+  box-shadow: 0 0 30px rgba(80, 140, 255, 0.4);
+}
+#room-dialog::backdrop {
+  background: rgba(5, 5, 18, 0.75);
+}
+#room-dialog [hidden] {
+  display: none;
+}
+#room-form h2 {
+  margin: 0 0 12px;
+  color: #fff2a8;
+  font-size: 20px;
+}
+#room-dialog-message {
+  margin: 0 0 16px;
+  color: #c8d0f0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+#room-code-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #c8d0f0;
+  font-size: 14px;
+}
+#room-code-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid #8498ff;
+  border-radius: 8px;
+  background: #101229;
+  color: var(--fg);
+  font: inherit;
+  letter-spacing: 0.2em;
+  user-select: text;
+  touch-action: auto;
+}
+#room-dialog-error {
+  min-height: 1.4em;
+  margin: 8px 0 0;
+  color: #ffaaa7;
+  font-size: 13px;
+}
+#player-name-dialog::backdrop {
+  background: rgba(5, 5, 18, 0.75);
+}
+#player-name-form h2 {
+  margin: 0 0 16px;
+  color: #fff2a8;
+  font-size: 20px;
+}
+#player-name-form label {
+  display: block;
+  margin-bottom: 8px;
+  color: #c8d0f0;
+  font-size: 14px;
+}
+#player-name-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid #8498ff;
+  border-radius: 8px;
+  background: #101229;
+  color: var(--fg);
+  font: inherit;
+  user-select: text;
+  touch-action: auto;
+}
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+.dialog-actions button {
+  padding: 9px 16px;
+  border: 1px solid #8fa4ff;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #4a5190, #2a2e5e);
+  color: var(--fg);
+  font: inherit;
+}
+.dialog-actions button.cancel {
+  border-color: #73799d;
+  background: #292c46;
+}
+@media (hover: hover) and (pointer: fine) {
+  #controls { display: none; } /* PCではキーボード操作 */
+}
