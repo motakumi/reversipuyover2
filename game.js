@@ -1,5 +1,5 @@
 // 起動したNode.jsサーバーに接続する
-const socket = io();
+const socket = io("https://reversipuyoserver.onrender.com/");
 
 "use strict";
 
