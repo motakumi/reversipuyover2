@@ -340,6 +340,10 @@ class PuyoGame {
   computeGravityMoves() {
     const moves = [];
     for (let x = 0; x < COLS; x++) {
+      if (this.isBattle) {
+        this.computeSegmentMoves(x, 0, ROWS - 1, moves);
+        continue;
+      }
       let segBottom = ROWS - 1;
       for (let y = ROWS - 1; y >= 0; y--) {
         if (this.board[y][x] === OJAMA) {
@@ -1418,12 +1422,12 @@ class PuyoGame {
     const centerY = rect.y + rect.h / 2;
     ctx.save();
     ctx.strokeStyle = "#ffffff";
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 4;
     ctx.lineCap = "round";
-    for (const offset of [-7, 0, 7]) {
+    for (const offset of [-9, 0, 9]) {
       ctx.beginPath();
-      ctx.moveTo(centerX - 11, centerY + offset);
-      ctx.lineTo(centerX + 11, centerY + offset);
+      ctx.moveTo(centerX - 13, centerY + offset);
+      ctx.lineTo(centerX + 13, centerY + offset);
       ctx.stroke();
     }
     ctx.restore();
@@ -1520,14 +1524,14 @@ class PuyoGame {
   drawTitleArtwork(titleY, puyoY) {
     const cx = SCREEN_W / 2;
 
-    this.fancyText("REVERSI", cx, titleY, 54, "#fff7c2", "#ffb300");
-    this.fancyText("PUYO", cx, titleY + 66, 84, "#c8f1ff", "#2d8cff");
+    this.fancyText("REVERSI", cx, titleY, 60, "#fff7c2", "#ffb300");
+    this.fancyText("PUYO", cx, titleY + 72, 92, "#c8f1ff", "#2d8cff");
 
-    const n = COLORS.length, gap = 60;
+    const n = COLORS.length, gap = 64;
     const x0 = cx - ((n - 1) * gap) / 2;
     for (let i = 0; i < n; i++) {
       const y = puyoY + Math.sin(this.time / 320 + i * 0.9) * 10;
-      this.drawDisc(x0 + i * gap, y, 24, COLORS[i], i === 2);
+      this.drawDisc(x0 + i * gap, y, 27, COLORS[i], i === 2);
     }
   }
 
@@ -1546,12 +1550,12 @@ class PuyoGame {
     this.ctx.lineWidth = 1.5;
     this.ctx.stroke();
     this.text(nameLabel, nameButton.x + 12, nameButton.y + nameButton.h / 2,
-      `700 14px ${FONT_UI}`, "#ffffff", "left", "middle");
+      `700 16px ${FONT_UI}`, "#ffffff", "left", "middle");
 
     this.drawTitleArtwork(SCREEN_H * 0.26, SCREEN_H * 0.50);
 
     this.text(`HI-SCORE  ${this.hiScore}`, cx, SCREEN_H * 0.59,
-      `700 16px ${FONT_DISPLAY}`, "rgb(255,230,120)", "center", "middle");
+      `700 19px ${FONT_DISPLAY}`, "rgb(255,230,120)", "center", "middle");
 
     this.drawButton(this.titleLayout().play, "プレイ");
     this.drawButton(this.titleLayout().createRoom, "部屋を作成");
@@ -1559,13 +1563,13 @@ class PuyoGame {
 
     if (activeRoomCode) {
       this.text(`ルームコード：${activeRoomCode}`, cx, SCREEN_H * 0.83,
-        `700 15px ${FONT_UI}`, "rgb(255,230,120)", "center", "middle");
+        `700 17px ${FONT_UI}`, "rgb(255,230,120)", "center", "middle");
     }
 
     this.text("A / D：移動　　S：高速落下　　SPACE：回転", cx, SCREEN_H * 0.88,
-      `13px ${FONT_UI}`, "rgb(170,185,220)", "center", "middle");
+      `15px ${FONT_UI}`, "rgb(170,185,220)", "center", "middle");
     this.text("◎は同じ色で挟むとその間の色を反転させる", cx, SCREEN_H * 0.93,
-      `13px ${FONT_UI}`, "rgb(170,185,220)", "center", "middle");
+      `15px ${FONT_UI}`, "rgb(170,185,220)", "center", "middle");
   }
 
   drawRoomScreen() {
@@ -1617,8 +1621,8 @@ class PuyoGame {
   }
 
   titleLayout() {
-    const bw = 250, bh = 54;
-    const roomButtonW = 120, roomButtonH = 44, roomGap = 10;
+    const bw = 280, bh = 60;
+    const roomButtonW = 136, roomButtonH = 50, roomGap = 12;
     const rowWidth = roomButtonW * 2 + roomGap;
     const rowX = (SCREEN_W - rowWidth) / 2;
     return {
@@ -1632,20 +1636,20 @@ class PuyoGame {
     const label = this.playerName
       ? `プレイヤー名：${this.playerName}`
       : "プレイヤー名を入力してください";
-    this.ctx.font = `700 14px ${FONT_UI}`;
+    this.ctx.font = `700 16px ${FONT_UI}`;
     const labelWidth = this.ctx.measureText(label).width;
-    return { x: 14, y: 12, w: Math.ceil(labelWidth) + 24, h: 38 };
+    return { x: 14, y: 12, w: Math.ceil(labelWidth) + 28, h: 44 };
   }
 
   // ゲームオーバー画面のレイアウト(描画とクリック判定で共用)
   gameoverLayout() {
-    const boxW = 340, boxH = 400;
+    const boxW = 390, boxH = 450;
     const boxX = (SCREEN_W - boxW) / 2, boxY = (SCREEN_H - boxH) / 2;
-    const bw = 250, bh = 46, bx = (SCREEN_W - bw) / 2;
+    const bw = 290, bh = 54, bx = (SCREEN_W - bw) / 2;
     return {
       box: { x: boxX, y: boxY, w: boxW, h: boxH },
-      retry: { x: bx, y: boxY + 270, w: bw, h: bh },
-      title: { x: bx, y: boxY + 330, w: bw, h: bh },
+      retry: { x: bx, y: boxY + 310, w: bw, h: bh },
+      title: { x: bx, y: boxY + 380, w: bw, h: bh },
     };
   }
 
@@ -1674,7 +1678,7 @@ class PuyoGame {
     ctx.lineWidth = 2;
     ctx.stroke();
     ctx.restore();
-    this.text(label, r.x + r.w / 2, r.y + r.h / 2 + 1, `700 17px ${FONT_UI}`,
+    this.text(label, r.x + r.w / 2, r.y + r.h / 2 + 1, `700 19px ${FONT_UI}`,
       disabled ? "rgb(145,150,170)" : "#ffffff", "center", "middle");
   }
 
@@ -1701,21 +1705,21 @@ class PuyoGame {
     ctx.stroke();
     ctx.restore();
 
-    this.fancyText("GAME OVER", cx, boxY + 56, 38, "#ffb3b3", "#ff3b4e");
+    this.fancyText("GAME OVER", cx, boxY + 64, 44, "#ffb3b3", "#ff3b4e");
 
-    this.text("SCORE", cx, boxY + 114, `700 14px ${FONT_DISPLAY}`, "rgb(140,170,255)", "center", "middle");
-    this.textFit(String(this.score), cx, boxY + 152, boxW - 60, 40, 900, "rgb(255,230,120)");
+    this.text("SCORE", cx, boxY + 136, `700 17px ${FONT_DISPLAY}`, "rgb(140,170,255)", "center", "middle");
+    this.textFit(String(this.score), cx, boxY + 180, boxW - 60, 46, 900, "rgb(255,230,120)");
 
     if (this.newRecord) {
       ctx.save();
       ctx.globalAlpha = 0.6 + 0.4 * Math.sin(this.time / 160);
-      this.text("NEW RECORD!", cx, boxY + 204, `900 22px ${FONT_DISPLAY}`, "#ffd54f", "center", "middle");
+      this.text("NEW RECORD!", cx, boxY + 244, `900 26px ${FONT_DISPLAY}`, "#ffd54f", "center", "middle");
       ctx.restore();
     } else {
-      this.text(`BEST  ${this.hiScore}`, cx, boxY + 204, `700 16px ${FONT_DISPLAY}`, "rgb(220,225,255)", "center", "middle");
+      this.text(`BEST  ${this.hiScore}`, cx, boxY + 244, `700 19px ${FONT_DISPLAY}`, "rgb(220,225,255)", "center", "middle");
     }
 
-    this.text(`MAX CHAIN  ${this.maxChain}`, cx, boxY + 238, `700 14px ${FONT_DISPLAY}`, "rgb(220,225,255)", "center", "middle");
+    this.text(`MAX CHAIN  ${this.maxChain}`, cx, boxY + 286, `700 17px ${FONT_DISPLAY}`, "rgb(220,225,255)", "center", "middle");
 
     this.drawButton(L.retry, "リトライ");
     this.drawButton(L.title, "タイトルに戻る");
@@ -1736,19 +1740,19 @@ class PuyoGame {
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    this.fancyText("PAUSE", SCREEN_W / 2, panel.y + 48, 30, "#fff2a8", "#ffb02e");
+    this.fancyText("PAUSE", SCREEN_W / 2, panel.y + 56, 36, "#fff2a8", "#ffb02e");
     this.drawButton(layout.continue, "つづける");
     this.drawButton(layout.restart, "最初からやり直す");
     this.drawButton(layout.title, "タイトルに戻る");
   }
 
   pauseMenuLayout() {
-    const buttonWidth = 250, buttonHeight = 48, gap = 14;
+    const buttonWidth = 290, buttonHeight = 56, gap = 16;
     const buttonX = (SCREEN_W - buttonWidth) / 2;
-    const buttonY = SCREEN_H / 2 - 40;
-    const panelWidth = 320, panelHeight = 330;
+    const buttonY = SCREEN_H / 2 - 46;
+    const panelWidth = 360, panelHeight = 380;
     return {
-      toggle: { x: SCREEN_W - 52, y: TITLE_Y + 2, w: 40, h: 36 },
+      toggle: { x: SCREEN_W - 60, y: TITLE_Y + 2, w: 48, h: 42 },
       panel: {
         x: (SCREEN_W - panelWidth) / 2,
         y: (SCREEN_H - panelHeight) / 2,
