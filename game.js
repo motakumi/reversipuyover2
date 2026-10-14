@@ -636,7 +636,7 @@ class PuyoGame {
   maybeSendBattleOjama(cleared, sizeBonus) {
     if (!this.isBattle || !activeRoomCode || battleResult) return;
     const flipCount = this.chainCount;
-    const reversiBonus = flipCount <= 1 ? 0 : 1 + flipCount / 10;
+    const reversiBonus = flipCount <= 1 ? 0 : 1.1 + flipCount / 20;
     const attackPoints = Math.floor(
       cleared * 10 * reversiBonus * sizeBonus
     );
