@@ -193,6 +193,7 @@ class PuyoGame {
 
     this.state = "PLAYING";
     this.chainCount = 0;
+    this.battleReversiFlipCount = 0;
 
     this.fallingPuyos = [];
     this.afterFallingAction = null;
@@ -328,6 +329,7 @@ class PuyoGame {
     }
     this.current = null;
     this.chainCount = 0;
+    this.battleReversiFlipCount = 0;
 
     // 今回新たに置いたリバーシぷよだけをリバーシ判定の対象にする
     this.pendingNewReversiCells = newReversiCells;
@@ -449,7 +451,7 @@ class PuyoGame {
       }
       this.checkForMatches();
     } else if (this.afterFallingAction === "FLIP_CHECK") {
-      this.checkForMatches(false);
+      this.checkForMatches();
     } else if (this.afterFallingAction === "SPAWN_PAIR") {
       if (this.isBattle && this.pendingBattleOjama > 0) {
         this.startBattleOjamaDrop();
@@ -516,7 +518,7 @@ class PuyoGame {
 
   finalizeReversiFlip() {
     Sound.play("flip");
-    if (this.isBattle) this.chainCount = this.flippingCells.size;
+    if (this.isBattle) this.battleReversiFlipCount = this.flippingCells.size;
     for (const [k, color] of this.flippingCells) {
       const [fx, fy] = parseKey(k);
       if (color === OJAMA) {
@@ -635,11 +637,11 @@ class PuyoGame {
 
   maybeSendBattleOjama(cleared, sizeBonus) {
     if (!this.isBattle || !activeRoomCode || battleResult) return;
-    const flipCount = this.chainCount;
-    const reversiBonus = flipCount <= 1 ? 0 : 1.1 + flipCount / 20;
-    const attackPoints = Math.floor(
-      cleared * 10 * reversiBonus * sizeBonus
-    );
+    const chainBonus = this.chainCount === 1
+      ? (this.battleReversiFlipCount >= 2 ? 1 : 0)
+      : Math.max(1, this.chainCount);
+    const attackPoints = Math.floor(cleared * 10 * chainBonus * sizeBonus);
+    this.battleReversiFlipCount = 0;
     const count = Math.floor(attackPoints / BATTLE_OJAMA_POINT_INTERVAL);
     if (count <= 0) return;
     socket.emit("battleOjama", { roomCode: activeRoomCode, count });
